@@ -10,13 +10,16 @@ const yelpRestaurentInfo = {
     categories: [{ title: "Thai"}, { title: "Comfort Fodd"}],
 };
 
-const {name, image, price, reviews, rating, categories} = yelpRestaurentInfo;
 
-const formattedCategories = categories.map((cat) => cat.title).join(" • ");
 
-const description = `${formattedCategories} ${price ? " • " + price: ""} • 💸 • ${rating} ⭐(${reviews}+)`;
+export default function About(props) {
 
-export default function About() {
+    const {name, image, price, review_count, rating, categories} = props.route.params;
+
+    const formattedCategories = categories.map((cat) => cat.title).join(" • ");
+
+    const description = `${formattedCategories} ${price ? " • " + price: ""} • 💸 • ${rating} ⭐(${review_count}+)`;
+
     return (
         <View>
             <RestaurantImage image={image}/>

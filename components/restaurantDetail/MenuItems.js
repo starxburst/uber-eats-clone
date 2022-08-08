@@ -1,6 +1,9 @@
 import React from "react";
 import { View, Text, SafeAreaView, Image, ScrollView, StyleSheet } from "react-native";
 import { Divider } from "@rneui/themed";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { useDispatch, useSelector } from "react-redux";
+
 
 const foods = [
     {
@@ -30,11 +33,12 @@ const foods = [
     
 ];
 
+
 const styles = StyleSheet.create({
     menuItemStyle: {
         flexDirection: "row",
         justifyContent: "space-between",
-        margin: 20,
+        margin: 10,
     },
 
     titleStyle: {
@@ -43,13 +47,34 @@ const styles = StyleSheet.create({
     }
 })
 
-export default function MenuItems() {
-    return (
+export default function MenuItems({ restaurantName }) {
+
+    const dispatch = useDispatch();
+    const selectItem = (item, checkboxValue) => {
+        dispatch ({
+            type: "ADD_TO_CART",
+            payload: {...item, restaurantName: restaurantName, checkboxValue: checkboxValue},
+        })
+    }
+
+    const cartItems = useSelector(state => state.cartReducer.selectedItems.items);
+
+    const isFoodInCart = (food, cartItems) => {
+        return Boolean(cartItems.find(item => item.title == food.title));
+    }
+
+        return (
             <ScrollView showsVerticalScrollIndicator={false} /*style={{borderWidth: 5,  borderColor: 'red'}}*/ >
                 {foods.map((food, index) => {
                     return (
                         <View key={index} >
                             <View key={index} style={styles.menuItemStyle} >
+                                <BouncyCheckbox 
+                                    iconStyle = {{borderColor: "lightgray", borderRadius: 5}}
+                                    fillColor="green"
+                                    onPress={(checkboxValue) => selectItem(food, checkboxValue)}
+                                    isChecked={isFoodInCart(food, cartItems)}
+                                    />
                                 <FoodInfo food={food} />
                                 <FoodImage food={food} />
                             </View>
