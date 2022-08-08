@@ -5,19 +5,22 @@ const yelpRestaurentInfo = {
     name: "Farmhouse Kitchen That Chisine",
     image: "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
     price: "$$",
-    reviews: "1500"
-}
+    reviews: "1500",
+    rating: "4.5",
+    categories: [{ title: "Thai"}, { title: "Comfort Fodd"}],
+};
 
-const image = "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260";
+const {name, image, price, reviews, rating, categories} = yelpRestaurentInfo;
 
-const title = "Farmhouse Kitchen That Cuisine"
-const description = "Thai • Comfort Food • $$ • 💸 • 4 ⭐ (2913+)"
+const formattedCategories = categories.map((cat) => cat.title).join(" • ");
+
+const description = `${formattedCategories} ${price ? " • " + price: ""} • 💸 • ${rating} ⭐(${reviews}+)`;
 
 export default function About() {
     return (
         <View>
             <RestaurantImage image={image}/>
-            <RestaurantTitle title={title}/>
+            <RestaurantName title={name}/>
             <RestaurantDescription description={description}/>
         </View>
     )
@@ -29,7 +32,7 @@ const RestaurantImage = (props) => {
     )
 }
 
-const RestaurantTitle = (props) => {
+const RestaurantName = (props) => {
     return (
         <Text 
             style={{

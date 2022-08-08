@@ -12,7 +12,7 @@ import { Divider } from "@rneui/themed";
 
 
 
-export default function Home() {
+export default function Home({ navigation }) {
 
     const [restaurantData, setRestaurantData] = useState(localRestaurants);
     const [city, setCity] = useState("New York");
@@ -46,7 +46,7 @@ export default function Home() {
             </View>
             <ScrollView showsVerticalScrollIndicator={false} >
                 <Categories />
-                <RestaurantItems restaurantData={restaurantData} />
+                <RestaurantItems restaurantData={restaurantData} navigation={navigation} />
             </ScrollView>
             <Divider width={1}/>
             <BottomTabs />
