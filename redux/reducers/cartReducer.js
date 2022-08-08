@@ -12,7 +12,7 @@ let cartReducer = (state = defaultState, action) => {
             if (action.payload.checkboxValue) {                
                 newState.selectedItems = {
                     items: [...newState.selectedItems.items, action.payload],
-                    restaurantName: action.restaurantName,
+                    restaurantName: action.payload.restaurantName,
                 };
 
                 console.log(newState);

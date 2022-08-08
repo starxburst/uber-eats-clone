@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, Modal, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
+import OrderItem from "./OrderItem";
+import { db } from "../../config/firebase";
+import { getFirestore, collection, getDocs, addDoc, doc, setDoc } from 'firebase/firestore';
 
-export default function ViewCart() {
+export default function ViewCart({ navigation }) {
 
     const [modalVisible, setModalVisible] = useState(false);
-    const {items, restaurentName } = useSelector(state => state.cartReducer.selectedItems);
+    const {items, restaurantName } = useSelector(state => state.cartReducer.selectedItems);
+    
 
     const total = items
         .map((item => Number(item.price.replace("$", ""))))
@@ -13,6 +17,19 @@ export default function ViewCart() {
 
     const totalUSD = `$${total.toFixed(2)}`;
     console.log(totalUSD);
+
+    const addOrderToFireBase = async() => {
+        const dbRef = collection(db, "Orders");
+        await addDoc(dbRef, {
+            restaurantName: restaurantName,
+            createdAt: new Date(),
+            items: items,
+        });
+        
+        setModalVisible(false);
+
+        navigation.navigate("OrderCompleted");
+    }
 
     const styles = StyleSheet.create({
         modalContainer: {
@@ -53,7 +70,44 @@ export default function ViewCart() {
             <>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalCheckoutContainer} >
-                        <Text style={styles.restaurantName} >{restaurentName}</Text>
+                        <Text style={styles.restaurantName} >{restaurantName}</Text>
+                        {items.map((item, index) => {
+                            return (
+                                <OrderItem key={index} item={item} />
+                            )
+                        })}
+                        <View style={styles.subtotalContainer} >
+                            <Text style={styles.subtotalText} >Subtotal</Text>
+                            <Text>{totalUSD}</Text>
+                        </View>
+                        <View style={{ flexDirection: "row", justifyContent: "center" }} >
+                            <TouchableOpacity 
+                                onPress={() => {
+                                    //setModalVisible(false)//
+                                    addOrderToFireBase();
+                                    }
+                                }
+                                style={{
+                                    marginTop: 20,
+                                    backgroundColor: "green",
+                                    alignItems: "center",
+                                    padding: 13,
+                                    borderRadius: 30,
+                                    width: 300,
+                                    position: "relative",
+                                }} 
+                                >
+                                <Text style={{ color: "white", fontSize: 20 }} >Checkout</Text>
+                                <Text style={{
+                                    position: "absolute",
+                                    right: 20,
+                                    color: "white",
+                                    fontSize: 15,
+                                    top: 17}} >
+                                    {total ? totalUSD: ""}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </>
