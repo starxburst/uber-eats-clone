@@ -48,24 +48,30 @@ export default function Ordercompleted() {
 
     return (
         <SafeAreaView style={{marginTop: StatusBar.currentHeight, flex: 1, backgroundColor: "white"}} >
-            <LottieView 
-                style={{
-                    height: 100,
-                    alignSelf: "center",
-                    marginBottom: 30,
-                }}
-                source={require("../assets/animations/check-mark.json")} autoPlay loop={false}/>
-                <Text>
-                    Your order at {restaurantName} has been placed for {totalUSD}
-                </Text>
-                <MenuItems foods={lastOrder.items} hideCheckbox={true} />
-                <LottieView 
-                style={{
-                    height: 100,
-                    alignSelf: "center",
-                    marginBottom: 30,
-                }}
-                source={require("../assets/animations/cooking.json")} autoPlay loop={false}/>
+            <View style={{
+                margin: 15,
+                alignItems: "center",
+                height: "100%",
+            }} >
+                <LottieView
+                    style={{
+                        height: 100,
+                        alignSelf: "center",
+                        marginBottom: 30,
+                    }}
+                    source={require("../assets/animations/check-mark.json")} autoPlay loop={false}/>
+                    <Text style={{fontSize: 20, fontWeight: "bold"}} >
+                        Your order at {restaurantName} has been placed for {totalUSD}
+                    </Text>
+                    <MenuItems foods={lastOrder.items} hideCheckbox={true} />
+                    <LottieView
+                    style={{
+                        height: 100,
+                        alignSelf: "center",
+                        marginBottom: 30,
+                    }}
+                    source={require("../assets/animations/cooking.json")} autoPlay loop={false}/>
+            </View>
         </SafeAreaView>
     )
 }
