@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, ScrollView, StatusBar } from "react-native";
-import Categories from "../components/Categories";
-import HeaderTabs from "../components/HeaderTabs";
-import RestaurantItems, { localRestaurants } from "../components/RestaurantItems";
-import SearchBar from '../components/SearchBar';
+import Categories from "../components/home/Categories";
+import HeaderTabs from "../components/home/HeaderTabs";
+import BottomTabs from "../components/home/BottomTabs";
+import SearchBar from '../components/home/SearchBar';
+import RestaurantItems, { localRestaurants } from "../components/home/RestaurantItems";
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { YELP_API_KEY } from "@env";
+import { Divider } from "@rneui/themed";
+
 
 
 
 export default function Home() {
 
     const [restaurantData, setRestaurantData] = useState(localRestaurants);
-    const [city, setCity] = useState("Hong Kong");
+    const [city, setCity] = useState("New York");
+    const [activeTab, setActiveTab] = useState("Delivery");
 
     const getStatusBarHeight = () => {
         console.log('statusBarHeight: ', StatusBar.currentHeight);
@@ -27,23 +31,25 @@ export default function Home() {
             }
         });
         const json = await response.json();
-        setRestaurantData(json.businesses);
+        setRestaurantData(json.businesses.filter((business) => business.transactions.includes(activeTab.toLowerCase())));
     }
 
     useEffect(() => {
         getRestaurantsFromYelp();
-    }, [city])
+    }, [city, activeTab]);
 
     return (
         <SafeAreaView style={{ backgroundColor: "#eee", flex: 1, marginTop: StatusBar.currentHeight }}>
             <View style={{ backgroundColor: "white", padding: 15, }}>
-                <HeaderTabs />
+                <HeaderTabs activeTab={activeTab} setActiveTab={setActiveTab} />
                 <SearchBar setCity={setCity} />
             </View>
             <ScrollView showsVerticalScrollIndicator={false} >
                 <Categories />
                 <RestaurantItems restaurantData={restaurantData} />
             </ScrollView>
+            <Divider width={1}/>
+            <BottomTabs />
         </SafeAreaView>
     );
 
